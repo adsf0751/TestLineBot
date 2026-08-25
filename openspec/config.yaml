@@ -1,0 +1,17 @@
+schema: spec-driven
+
+context: |
+  本專案專屬於 LINE 遊戲服務，所有功能設計都應以 LINE Bot 的互動流程、訊息格式與使用情境為核心。
+  技術堆疊以 Python、Flask 與 LINE Bot SDK 為主。
+  app.py 負責 LINE Webhook、指令分流與訊息回覆；各遊戲的核心邏輯應放在 games/ 底下各自獨立的資料夾中。
+  目前已存在的數字拼圖遊戲位於 games/number_puzzle/。
+
+rules:
+  proposal:
+    - 必須以自然、流暢的繁體中文撰寫。
+    - 必須明確說明對 LINE 使用者互動流程的影響。
+  design:
+    - 必須說明遊戲邏輯與 LINE Webhook 入口之間的責任切分。
+    - 新增遊戲時必須規劃獨立的 games/<game_name>/ 資料夾。
+  tasks:
+    - 任務描述必須能對應到可驗證的實作結果。

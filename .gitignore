@@ -1,0 +1,49 @@
+# 環境變數與本機設定
+.env
+.env.*
+!.env.example
+
+# Python 快取與編譯產物
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# 虛擬環境
+.venv/
+venv/
+env/
+ENV/
+
+# 打包與建置產物
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# 測試與覆蓋率產物
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# 型別檢查與工具快取
+.mypy_cache/
+.ruff_cache/
+.pyre/
+
+# Flask runtime
+instance/
+.webassets-cache/
+
+# log 檔案
+*.log
+logs/*.log
+!logs/.gitkeep
+
+# 編輯器與作業系統產物
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
