@@ -2,12 +2,7 @@ import os
 from flask import Flask, request
 from dotenv import load_dotenv
 
-from games.number_puzzle import (
-    create_problem,
-    format_answer_reply,
-    format_problem_reply,
-    write_problem_log,
-)
+from services.command_router import GameSessionState, handle_command
 from linebot.v3 import WebhookHandler
 from linebot.v3.exceptions import InvalidSignatureError
 
@@ -36,7 +31,7 @@ configuration = Configuration(
 )
 
 handler = WebhookHandler(CHANNEL_SECRET)
-current_number_puzzles = {}
+game_state = GameSessionState()
 
 
 # LINE Webhook
@@ -62,21 +57,12 @@ def handle_message(event):
 
     print("收到 LINE 訊息：", text)
 
-    if text == "!":
-        problem = create_problem()
-        write_problem_log(problem)
-        current_number_puzzles[get_source_key(event)] = problem
+    source_key = get_source_key(event)
+    line_user_id = get_line_user_id(event)
 
-        reply_text(event.reply_token, format_problem_reply(problem))
-
-    elif text == "!-a":
-        problem = current_number_puzzles.get(get_source_key(event))
-
-        if problem is None:
-            reply_text(event.reply_token, "目前沒有題目，請先輸入 ! 產生新題目。")
-            return
-
-        reply_text(event.reply_token, format_answer_reply(problem))
+    reply = handle_command(text, source_key=source_key, line_user_id=line_user_id, state=game_state)
+    if reply is not None:
+        reply_text(event.reply_token, reply)
 
 
 def get_source_key(event):
@@ -89,6 +75,11 @@ def get_source_key(event):
             return f"{source_type}:{source_id_name}:{source_id}"
 
     return "unknown"
+
+
+def get_line_user_id(event):
+    source = getattr(event, "source", None)
+    return getattr(source, "user_id", None)
 
 
 def reply_text(reply_token, text):

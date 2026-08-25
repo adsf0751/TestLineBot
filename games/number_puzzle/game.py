@@ -62,7 +62,13 @@ def validate_problem(problem: NumberPuzzleProblem) -> bool:
     return value.denominator == 1 and value.numerator == problem.target
 
 
-def write_problem_log(problem: NumberPuzzleProblem, log_file: Path = LOG_FILE) -> None:
+def write_problem_log(
+    problem: NumberPuzzleProblem,
+    log_file: Path = LOG_FILE,
+    source_key: str | None = None,
+    line_user_id: str | None = None,
+    nickname: str | None = None,
+) -> None:
     if not validate_problem(problem):
         raise ValueError("題目算式驗算失敗，拒絕寫入 log")
 
@@ -74,6 +80,15 @@ def write_problem_log(problem: NumberPuzzleProblem, log_file: Path = LOG_FILE) -
         "target": problem.target,
         "formula_answer": problem.answer_text,
     }
+
+    if source_key is not None:
+        record["source_key"] = source_key
+
+    if line_user_id is not None:
+        record["line_user_id"] = line_user_id
+
+    if nickname is not None:
+        record["nickname"] = nickname
 
     with log_file.open("a", encoding="utf-8") as file:
         file.write(json.dumps(record, ensure_ascii=False) + "\n")
@@ -95,6 +110,17 @@ def format_answer_reply(problem: NumberPuzzleProblem) -> str:
         [
             "數字拼圖答案",
             problem.answer_text,
+        ]
+    )
+
+
+def format_help_reply() -> str:
+    return "\n".join(
+        [
+            "算式拼圖可用指令",
+            "!-n：產生新題目",
+            "!-a：查看當前題目的答案",
+            "!-h：查看算式拼圖指令",
         ]
     )
 

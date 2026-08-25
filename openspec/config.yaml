@@ -4,7 +4,7 @@ context: |
   本專案專屬於 LINE 遊戲服務，所有功能設計都應以 LINE Bot 的互動流程、訊息格式與使用情境為核心。
   技術堆疊以 Python、Flask 與 LINE Bot SDK 為主。
   app.py 負責 LINE Webhook、指令分流與訊息回覆；各遊戲的核心邏輯應放在 games/ 底下各自獨立的資料夾中。
-  目前已存在的數字拼圖遊戲位於 games/number_puzzle/。
+  目前已存在的遊戲包含：算式拼圖 games/number_puzzle/，以及 1A2B games/one_a_two_b/。
 
 rules:
   proposal:

@@ -8,6 +8,7 @@ from games.number_puzzle import (
     NumberPuzzleProblem,
     create_problem,
     format_answer_reply,
+    format_help_reply,
     format_problem_reply,
     validate_problem,
     write_problem_log,
@@ -32,13 +33,22 @@ class NumberPuzzleTest(unittest.TestCase):
         self.assertIn("題目：2、3、4", format_problem_reply(problem))
         self.assertIn("目標值：20", format_problem_reply(problem))
         self.assertIn("(2 + 3) * 4 = 20", format_answer_reply(problem))
+        self.assertIn("!-n", format_help_reply())
+        self.assertIn("!-a", format_help_reply())
+        self.assertIn("!-h", format_help_reply())
 
     def test_write_problem_log_validates_and_records_problem(self):
         problem = NumberPuzzleProblem((2, 3, 4), 20, "(2 + 3) * 4")
 
         with tempfile.TemporaryDirectory() as temp_dir:
             log_file = Path(temp_dir) / "number_puzzle.log"
-            write_problem_log(problem, log_file)
+            write_problem_log(
+                problem,
+                log_file,
+                source_key="user:user_id:U123",
+                line_user_id="U123",
+                nickname="小明",
+            )
 
             record = json.loads(log_file.read_text(encoding="utf-8"))
 
@@ -47,6 +57,9 @@ class NumberPuzzleTest(unittest.TestCase):
         self.assertEqual([2, 3, 4], record["question"])
         self.assertEqual(20, record["target"])
         self.assertEqual("(2 + 3) * 4 = 20", record["formula_answer"])
+        self.assertEqual("user:user_id:U123", record["source_key"])
+        self.assertEqual("U123", record["line_user_id"])
+        self.assertEqual("小明", record["nickname"])
 
     def test_invalid_problem_is_not_logged(self):
         problem = NumberPuzzleProblem((2, 3, 4), 21, "(2 + 3) * 4")
